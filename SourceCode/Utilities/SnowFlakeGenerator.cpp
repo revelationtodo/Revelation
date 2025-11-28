@@ -1,4 +1,5 @@
 #include "SnowflakeGenerator.h"
+#include <chrono>
 
 SnowflakeGenerator::SnowflakeGenerator()
 {
