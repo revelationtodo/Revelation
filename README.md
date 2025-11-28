@@ -34,7 +34,7 @@ setx VCPKG_DEFAULT_BINARY_CACHE "path_to_an_empty_folder2"
 ### Clone Repository
 
 ```bash
-git clone --recursive https://github.com/Codingdogzxg/Revelation.git
+git clone --recursive https://github.com/revelationtodo/Revelation.git
 ```
 
 ### Edit CMakePresets.json
@@ -61,7 +61,7 @@ cmake ../SourceCode/ --preset windows
 ### Deploy executable 
 
 ```bash
-# using qt msvc command line tool
+# using Qt msvc command line tool
 # cd to binary folder where `Revelation.exe` is located
 windeployqt Revelation.exe
 ```
