@@ -7,7 +7,7 @@
 TaskSerializer::TaskSerializer(IRevelationInterface* intf)
     : m_interface(intf)
 {
-    m_dataPersistenceIntf = m_interface->GetInterfaceById<IDataPersistenceInterface>("DataPeristence");
+    m_dataPersistenceIntf = m_interface->GetInterfaceById<IDataPersistenceInterface>("DataPersistence");
     m_utilityIntf         = m_interface->GetInterfaceById<IUtilityInterface>("Utility");
 
     Initialize();
