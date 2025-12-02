@@ -26,18 +26,22 @@ void RevelationSplash::InitWidget()
     this->setWindowFlag(Qt::WindowStaysOnTopHint);
     this->setAttribute(Qt::WA_TranslucentBackground);
 
-    auto iconPath   = m_interface->GetResourcePath() / "images" / "icon.ico";
+    auto iconPath = m_interface->GetResourcePath() / "images" / "icon.ico";
     if (std::filesystem::exists(iconPath))
     {
-        QPixmap pixmap(QString::fromStdString(iconPath.u8string()));
+        auto    u8     = iconPath.u8string();
+        QString u8Path = QString::fromUtf8(reinterpret_cast<const char*>(u8.c_str()), u8.size());
+        QPixmap pixmap(u8Path);
         this->setWindowIcon(pixmap);
     }
 
-    auto    imagePath = m_interface->GetResourcePath() / "images" / "splash.png";
+    auto imagePath = m_interface->GetResourcePath() / "images" / "splash.png";
     if (std::filesystem::exists(imagePath))
     {
-        QLabel* label = new QLabel(ui.eSplashWidget);
-        QPixmap pixmap(QString::fromStdString(imagePath.u8string()));
+        QLabel* label  = new QLabel(ui.eSplashWidget);
+        auto    u8     = imagePath.u8string();
+        QString u8Path = QString::fromUtf8(reinterpret_cast<const char*>(u8.c_str()), u8.size());
+        QPixmap pixmap(u8Path);
         label->setStyleSheet("background-color: transparent;");
         label->setPixmap(pixmap);
         label->resize(pixmap.size());

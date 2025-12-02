@@ -21,11 +21,11 @@ using DisposableLink = std::shared_ptr<IDatabaseLink>;
 class IDatabase
 {
   public:
-    IDatabase(){};
-    virtual ~IDatabase(){};
+    IDatabase() {};
+    virtual ~IDatabase() {};
 
-    virtual bool Open(const std::string& databaePath) = 0;
-    virtual void Close()                              = 0;
+    virtual bool Open(const std::u8string& databasePath) = 0;
+    virtual void Close()                                 = 0;
 
     virtual DisposableLink GetDisposableLink() = 0;
 
@@ -47,7 +47,7 @@ class IDatabaseLink
 {
   public:
     IDatabaseLink() {}
-    virtual ~IDatabaseLink(){};
+    virtual ~IDatabaseLink() {};
 
     virtual bool Exec(const std::string& stmt)        = 0;
     virtual bool PrepareStmt(const std::string& stmt) = 0;

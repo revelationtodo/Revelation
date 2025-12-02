@@ -10,10 +10,12 @@ SQLiteDatabase::~SQLiteDatabase()
     Close();
 }
 
-bool SQLiteDatabase::Open(const std::string& databaePath)
+bool SQLiteDatabase::Open(const std::u8string& databasePath)
 {
-    sqlite3_open(databaePath.c_str(), &m_database);
-    return m_database != nullptr;
+    const char* path = reinterpret_cast<const char*>(databasePath.c_str());
+
+    int rc = sqlite3_open(path, &m_database);
+    return rc == SQLITE_OK;
 }
 
 void SQLiteDatabase::Close()

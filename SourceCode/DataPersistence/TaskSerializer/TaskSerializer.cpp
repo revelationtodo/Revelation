@@ -83,7 +83,7 @@ void TaskSerializer::RetrieveTasks(std::vector<TaskPrototype>& tasks, const std:
         if (entry.is_regular_file())
         {
             std::filesystem::path filePath         = entry.path();
-            std::string           databaseFileStem = filePath.filename().stem().u8string();
+            std::string           databaseFileStem = filePath.filename().stem().string();
             time_t                date             = timeFormatter->ConvertDateTimeFromString(databaseFileStem);
             if (fromDate <= date && date <= toDate)
             {

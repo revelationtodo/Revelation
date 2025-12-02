@@ -8,7 +8,7 @@ class SQLiteDatabase : public IDatabase
     SQLiteDatabase();
     virtual ~SQLiteDatabase();
 
-    virtual bool Open(const std::string& databaePath) override;
+    virtual bool Open(const std::u8string& databasePath) override;
     virtual void Close() override;
 
     virtual DisposableLink GetDisposableLink() override;
