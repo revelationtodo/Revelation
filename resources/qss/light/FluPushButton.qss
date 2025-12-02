@@ -1,3 +1,11 @@
+FluPushButton {
+    color: black;
+    border: 1px solid rgb(229, 229, 229);
+    border-radius: 4px;
+    border-bottom: 1px solid rgb(204, 204, 204);
+    background-color: rgb(251, 251, 251);
+}
+
 FluPushButton FluPushButton#icon {
     color: black;
     border: 1px solid rgb(229, 229, 229);
