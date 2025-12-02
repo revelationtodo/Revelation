@@ -23,6 +23,12 @@ if(CMAKE_CONFIGURATION_TYPES)
         COMMAND ${CMAKE_COMMAND} -E copy_directory
                 ${CMAKE_CURRENT_SOURCE_DIR}/../resources
                 ${REVELATION_OUTPUT_DIR}/$<CONFIG>/resources
+
+        COMMAND ${CMAKE_COMMAND} -E remove_directory 
+                ${PROJECT_BINARY_DIR}/Revelation/resources
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_CURRENT_SOURCE_DIR}/../resources
+                ${PROJECT_BINARY_DIR}/Revelation/resources
     )
 else()
     add_custom_target(ResourceCopye
@@ -31,5 +37,11 @@ else()
         COMMAND ${CMAKE_COMMAND} -E copy_directory
                 ${CMAKE_CURRENT_SOURCE_DIR}/../resources
                 ${REVELATION_OUTPUT_DIR}/${CMAKE_BUILD_TYPE}/resources
+
+        COMMAND ${CMAKE_COMMAND} -E remove_directory 
+                ${PROJECT_BINARY_DIR}/Revelation/resources
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_CURRENT_SOURCE_DIR}/../resources
+                ${PROJECT_BINARY_DIR}/Revelation/resources
     )
 endif()
