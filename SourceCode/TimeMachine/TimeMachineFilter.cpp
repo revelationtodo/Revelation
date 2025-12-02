@@ -61,7 +61,7 @@ void TimeMachineFilter::ReteiveTasksFromDatabase(std::vector<DateToTasks>& dateT
         if (entry.is_regular_file())
         {
             std::filesystem::path filePath         = entry.path();
-            std::string           databaseFileStem = filePath.filename().stem().u8string();
+            std::string           databaseFileStem = filePath.filename().stem().string();
             QDate                 databaseDate     = QDate::fromString(QString::fromStdString(databaseFileStem), "yyyy-MM-dd");
             if (fromDate <= databaseDate && databaseDate <= toDate)
             {
