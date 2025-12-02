@@ -35,18 +35,17 @@ void RevelationListDelegate::paint(QPainter* painter, const QStyleOptionViewItem
 
     RevelationListItem widget;
     widget.SetTaskData(task);
-    widget.ResizeWidget(opt.rect.size() * devicePixelRatio);
+    widget.resize(opt.rect.size());
     widget.SetMouseHoverd(index.row() == m_hoverRow);
-    widget.setGeometry(opt.rect);
+    widget.setGeometry(QRect(QPoint(), opt.rect.size()));
 
-    QSize   pixmapSize = opt.rect.size() * devicePixelRatio;
-    QPixmap pixmap(pixmapSize);
-    pixmap.setDevicePixelRatio(devicePixelRatio);
-    pixmap.fill(Qt::transparent);
-    widget.render(&pixmap, QPoint(), QRegion(), QWidget::DrawChildren);
-    painter->setRenderHint(QPainter::Antialiasing, true);
-    painter->setRenderHint(QPainter::TextAntialiasing, true);
-    painter->drawPixmap(opt.rect, pixmap);
+    QSize   ssize = opt.rect.size() * devicePixelRatio;
+    QPixmap pm(ssize);
+    pm.setDevicePixelRatio(devicePixelRatio);
+    pm.fill(Qt::transparent);
+
+    widget.render(&pm);
+    painter->drawPixmap(opt.rect.topLeft(), pm);
 }
 
 QSize RevelationListDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
