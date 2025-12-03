@@ -7,7 +7,7 @@
 RoutineSerializer::RoutineSerializer(IRevelationInterface* intf)
     : m_interface(intf)
 {
-    m_dataPersistenceIntf = m_interface->GetInterfaceById<IDataPersistenceInterface>("DataPeristence");
+    m_dataPersistenceIntf = m_interface->GetInterfaceById<IDataPersistenceInterface>("DataPersistence");
     m_utilityIntf         = m_interface->GetInterfaceById<IUtilityInterface>("Utility");
 
     Initialize();
@@ -83,14 +83,13 @@ void RoutineSerializer::Initialize()
     std::string           suffix           = ".rev";
     std::string           fileName         = "revelation" + suffix;
     std::filesystem::path databaseFilePath = databaseFolderPath / fileName;
-    bool                  newDatabase      = !std::filesystem::exists(databaseFilePath);
 
     m_database = new SQLiteDatabase;
-    m_database->SetDatabaseRole(DatabaseRole::Daily);
+    m_database->SetDatabaseRole(DatabaseRole::Primary);
     bool opened = m_database->Open(databaseFilePath.u8string());
 
     // create table
-    if (opened && newDatabase)
+    if (opened)
     {
         std::string createTableSql = R"(
             CREATE TABLE IF NOT EXISTS t_task_routines (
@@ -105,7 +104,7 @@ void RoutineSerializer::Initialize()
         auto link = m_database->GetDisposableLink();
         link->Exec(createTableSql);
 
-        m_dataPersistenceIntf->RegisterDatabase(DatabaseRole::Daily, m_database);
+        m_dataPersistenceIntf->RegisterDatabase(DatabaseRole::Primary, m_database);
     }
 }
 

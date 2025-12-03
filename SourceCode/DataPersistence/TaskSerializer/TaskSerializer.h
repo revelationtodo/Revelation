@@ -1,5 +1,6 @@
 #pragma once
 #include "DataPersistence/ITaskSerialzer.h"
+#include <unordered_set>
 #include <mutex>
 
 class IRevelationInterface;
@@ -25,6 +26,10 @@ class TaskSerializer : public ITaskSerializer
   private:
     void Initialize();
     void Uninitialize();
+
+    void CollectTasks();
+    void CollectRoutineTasks(std::unordered_set<TaskRoutine>& routines);
+    void CollectMostRecentTasks(std::vector<TaskPrototype>& tasks);
 
   private:
     IRevelationInterface*      m_interface           = nullptr;

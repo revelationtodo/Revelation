@@ -162,8 +162,13 @@ void TaskSerializer::PrepareDatabaseForToday()
             );
          )";
 
-        auto link = m_database->GetDisposableLink();
-        link->Exec(createTableSql);
+        {
+            auto link = m_database->GetDisposableLink();
+            link->Exec(createTableSql);
+        }
+
+        // collect tasks
+        CollectTasks();
 
         m_dataPersistenceIntf->RegisterDatabase(DatabaseRole::Daily, m_database);
     }
@@ -181,4 +186,95 @@ void TaskSerializer::Uninitialize()
         m_database->Close();
         delete m_database;
     }
+}
+
+void TaskSerializer::CollectTasks()
+{
+    std::unordered_set<TaskRoutine> routines;
+    CollectRoutineTasks(routines);
+
+    std::vector<TaskPrototype> mostRecentTasks;
+    CollectMostRecentTasks(mostRecentTasks);
+
+    std::vector<TaskPrototype> inheritedTasks;
+    for (TaskPrototype& task : mostRecentTasks)
+    {
+        if (task.m_taskStatus == TaskStatus::Done)
+        {
+            continue;
+        }
+
+        TaskRoutine r{task.m_id};
+        auto        finder = routines.find(r);
+        if (finder != routines.end())
+        {
+            routines.erase(finder);
+        }
+
+        task.m_taskTag = TaskTag::Inherited;
+        inheritedTasks.push_back(task);
+    }
+
+    std::string today     = m_utilityIntf->GetDateTimeFormatter()->GetCurrentDateTimeString(TimeMask::YMD);
+    time_t      todayTime = m_utilityIntf->GetDateTimeFormatter()->ConvertDateTimeFromString(today);
+    for (TaskRoutine routine : routines)
+    {
+        time_t fromTime = m_utilityIntf->GetDateTimeFormatter()->ConvertDateTimeFromString(routine.m_createTime);
+        if (!routine.IsRoutineDay(todayTime, fromTime))
+        {
+            continue;
+        }
+
+        inheritedTasks.insert(inheritedTasks.begin(), routine.ConvertToTask());
+    }
+
+    for (TaskPrototype task : inheritedTasks)
+    {
+        RecordTask(task);
+    }
+}
+
+void TaskSerializer::CollectRoutineTasks(std::unordered_set<TaskRoutine>& routines)
+{
+    auto routineSerializer = m_dataPersistenceIntf->GetRoutineSerializer();
+
+    std::vector<TaskRoutine> trs;
+    routineSerializer->ReteiveRoutines(trs);
+    routines = std::unordered_set<TaskRoutine>(trs.begin(), trs.end());
+}
+
+void TaskSerializer::CollectMostRecentTasks(std::vector<TaskPrototype>& tasks)
+{
+    // find the most recent database
+    std::filesystem::path databaseFolderPath = m_interface->GetApplicationPath() / "databases";
+    if (!std::filesystem::exists(databaseFolderPath))
+    {
+        return;
+    }
+
+    std::string today     = m_utilityIntf->GetDateTimeFormatter()->GetCurrentDateTimeString(TimeMask::YMD);
+    time_t      todayTime = m_utilityIntf->GetDateTimeFormatter()->ConvertDateTimeFromString(today);
+
+    std::string mostRecentDate     = "";
+    time_t      mostRecentDateTime = -1;
+    for (const auto& entry : std::filesystem::directory_iterator(databaseFolderPath))
+    {
+        if (entry.is_regular_file())
+        {
+            std::string date = entry.path().filename().stem().string();
+            if (date == today || date == "revelation")
+            {
+                continue;
+            }
+
+            time_t dateTime = m_utilityIntf->GetDateTimeFormatter()->ConvertDateTimeFromString(date);
+            if (dateTime > mostRecentDateTime)
+            {
+                mostRecentDate     = date;
+                mostRecentDateTime = dateTime;
+            }
+        }
+    }
+
+    RetrieveTasks(tasks, mostRecentDate);
 }

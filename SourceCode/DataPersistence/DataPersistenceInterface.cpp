@@ -1,5 +1,6 @@
 #include "DataPersistenceInterface.h"
 #include "TaskSerializer/TaskSerializer.h"
+#include "RoutineSerializer/RoutineSerializer.h"
 
 DataPersistenceInterface::DataPersistenceInterface(IRevelationInterface* intf)
     : m_interface(intf)
@@ -9,6 +10,7 @@ DataPersistenceInterface::DataPersistenceInterface(IRevelationInterface* intf)
 DataPersistenceInterface::~DataPersistenceInterface()
 {
     delete m_taskSerialzier;
+    delete m_routineSerializer;
 }
 
 void DataPersistenceInterface::Initialize()
@@ -26,6 +28,15 @@ ITaskSerializer* DataPersistenceInterface::GetTaskSerializer()
         m_taskSerialzier = new TaskSerializer(m_interface);
     }
     return m_taskSerialzier;
+}
+
+IRoutineSerialzer* DataPersistenceInterface::GetRoutineSerializer()
+{
+    if (nullptr == m_routineSerializer)
+    {
+        m_routineSerializer = new RoutineSerializer(m_interface);
+    }
+    return m_routineSerializer;
 }
 
 bool DataPersistenceInterface::RegisterDatabase(DatabaseRole role, IDatabase* database)

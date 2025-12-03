@@ -7,6 +7,7 @@
 #include <mutex>
 
 class TaskSerializer;
+class RoutineSerializer;
 class DataPersistenceInterface : public IDataPersistenceInterface
 {
   public:
@@ -16,7 +17,8 @@ class DataPersistenceInterface : public IDataPersistenceInterface
     virtual void Initialize() override;
     virtual void Uninitialize() override;
 
-    virtual ITaskSerializer* GetTaskSerializer() override;
+    virtual ITaskSerializer*   GetTaskSerializer() override;
+    virtual IRoutineSerialzer* GetRoutineSerializer() override;
 
     virtual bool       RegisterDatabase(DatabaseRole role, IDatabase* database) override;
     virtual IDatabase* GetDatabase(DatabaseRole role) override;
@@ -24,7 +26,8 @@ class DataPersistenceInterface : public IDataPersistenceInterface
   private:
     IRevelationInterface* m_interface = nullptr;
 
-    TaskSerializer* m_taskSerialzier = nullptr;
+    TaskSerializer*    m_taskSerialzier    = nullptr;
+    RoutineSerializer* m_routineSerializer = nullptr;
 
     std::unordered_map<DatabaseRole, IDatabase*> m_databases;
 };
