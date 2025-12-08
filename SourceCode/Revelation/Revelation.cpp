@@ -33,7 +33,6 @@ void Revelation::ReteiveDataFromDatabase()
 
     std::vector<TaskPrototype> tasks;
     dataPersistenceIntf->GetTaskSerializer()->RetrieveTasks(tasks);
-
     for (const auto& viewPr : m_listViews)
     {
         TaskStatus           taskStatus = viewPr.first;
@@ -47,6 +46,13 @@ void Revelation::ReteiveDataFromDatabase()
                 model->InsertTaskItem(task, true);
             }
         }
+    }
+
+    std::vector<TaskRoutine> routines;
+    dataPersistenceIntf->GetRoutineSerializer()->ReteiveRoutines(routines);
+    for (const auto& routine : routines)
+    {
+        RevelationListModel::InsertRoutineItem(routine, true);
     }
 }
 
@@ -119,6 +125,10 @@ void Revelation::InitWidget()
         // [view => right sidebar] task selection
         connect(view, SIGNAL(TaskItemSelected(const TaskPrototype&)),
                 GetSidebar(RevelationSidebar::Right), SLOT(OnTaskItemSelected(const TaskPrototype&)));
+
+        // [view => right sidebar] routine attached
+        connect(view, SIGNAL(TaskRoutineAttached(const TaskRoutine&)),
+                GetSidebar(RevelationSidebar::Right), SLOT(OnTaskRoutineAttached(const TaskRoutine&)));
     }
 
     FluStyleSheetUitls::setQssByFileName("/resources/qss/light/Revelation.qss", this);
@@ -150,6 +160,18 @@ RevelationSidebar* Revelation::GetSidebar(RevelationSidebar::Side side)
             // [this => right sidebar] task re-parenting
             connect(this, SIGNAL(TaskItemReparenting(const TaskPrototype&)),
                     m_rightSidebar, SLOT(OnTaskReparenting(const TaskPrototype&)));
+
+            // [right sidebar => this] routine added
+            connect(m_rightSidebar, SIGNAL(RoutineAdded(const TaskRoutine&)),
+                    this, SLOT(OnRoutineAdded(const TaskRoutine&)));
+
+            // [right sidebar => this] routine edited
+            connect(m_rightSidebar, SIGNAL(RoutineEdited(const TaskRoutine&)),
+                    this, SLOT(OnRoutineEdited(const TaskRoutine&)));
+
+            // [right sidebar => this] routine deleted
+            connect(m_rightSidebar, SIGNAL(RoutineDeleted(const TaskRoutine&)),
+                    this, SLOT(OnRoutineDeleted(const TaskRoutine&)));
         }
         sidebar = m_rightSidebar;
     }
@@ -254,6 +276,48 @@ void Revelation::OnTaskItemDeleted(const TaskPrototype& task)
     {
         threadTaskCreator->RunAsyncTask([=]() {
             dataPersistenceIntf->GetTaskSerializer()->RemoveTask(task);
+        });
+    }
+}
+
+void Revelation::OnRoutineAdded(const TaskRoutine& routine)
+{
+    RevelationListModel::InsertRoutineItem(routine);
+    
+    auto threadTaskCreator   = m_interface->GetInterfaceById<IUtilityInterface>("Utility")->GetThreadTaskCreator();
+    auto dataPersistenceIntf = m_interface->GetInterfaceById<IDataPersistenceInterface>("DataPersistence");
+    if (nullptr != threadTaskCreator && nullptr != dataPersistenceIntf)
+    {
+        threadTaskCreator->RunAsyncTask([=]() {
+            dataPersistenceIntf->GetRoutineSerializer()->RecordRoutine(routine);
+        });
+    }
+}
+
+void Revelation::OnRoutineEdited(const TaskRoutine& routine)
+{
+    RevelationListModel::ChangeRoutineItem(routine);
+
+    auto threadTaskCreator   = m_interface->GetInterfaceById<IUtilityInterface>("Utility")->GetThreadTaskCreator();
+    auto dataPersistenceIntf = m_interface->GetInterfaceById<IDataPersistenceInterface>("DataPersistence");
+    if (nullptr != threadTaskCreator && nullptr != dataPersistenceIntf)
+    {
+        threadTaskCreator->RunAsyncTask([=]() {
+            dataPersistenceIntf->GetRoutineSerializer()->RecordRoutine(routine);
+        });
+    }
+}
+
+void Revelation::OnRoutineDeleted(const TaskRoutine& routine)
+{
+    RevelationListModel::RemoveRoutineItem(routine);
+
+    auto threadTaskCreator   = m_interface->GetInterfaceById<IUtilityInterface>("Utility")->GetThreadTaskCreator();
+    auto dataPersistenceIntf = m_interface->GetInterfaceById<IDataPersistenceInterface>("DataPersistence");
+    if (nullptr != threadTaskCreator && nullptr != dataPersistenceIntf)
+    {
+        threadTaskCreator->RunAsyncTask([=]() {
+            dataPersistenceIntf->GetRoutineSerializer()->RemoveRoutine(routine);
         });
     }
 }

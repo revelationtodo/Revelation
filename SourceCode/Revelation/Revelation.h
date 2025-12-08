@@ -36,9 +36,14 @@ class Revelation : public QWidget
 
   public slots:
     void OnThemeChanged();
+
     void OnTaskItemReparenting(TaskPrototype task, TaskStatus from, TaskStatus to);
     void OnTaskItemEdited(const TaskPrototype& task);
     void OnTaskItemDeleted(const TaskPrototype& task);
+
+    void OnRoutineAdded(const TaskRoutine& routine);
+    void OnRoutineEdited(const TaskRoutine& routine);
+    void OnRoutineDeleted(const TaskRoutine& routine);
 
   private:
     Ui::RevelationClass ui;

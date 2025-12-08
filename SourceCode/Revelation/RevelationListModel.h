@@ -22,6 +22,10 @@ class RevelationListModel : public QAbstractListModel
     void ChangeTaskItem(const TaskPrototype& task);
     void RemoveTaskItem(const TaskPrototype& task);
 
+    static void InsertRoutineItem(const TaskRoutine& routine, bool fromDatabase = false);
+    static void ChangeRoutineItem(const TaskRoutine& routine);
+    static void RemoveRoutineItem(const TaskRoutine& routine);
+
   private:
     virtual QModelIndex   index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     virtual QModelIndex   parent(const QModelIndex& child) const override;
@@ -39,6 +43,7 @@ class RevelationListModel : public QAbstractListModel
 
     // cache
     static std::unordered_map<Uint64, TaskPrototype> s_taskCache;
+    static std::unordered_map<Uint64, TaskRoutine>   s_routineCache;
     static std::mutex                                s_mutex;
 
     TaskStatus m_type = TaskStatus::None;

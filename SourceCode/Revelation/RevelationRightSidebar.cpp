@@ -79,6 +79,8 @@ void RevelationRightSidebar::InitSignalSlots()
     connect(ui.btnSelectStartTime, &FluCalendarDateTimePicker::selectedTime, this, &RevelationRightSidebar::OnStartTimeSelected);
     connect(ui.btnSelectFinishTime, &FluCalendarDateTimePicker::selectedTime, this, &RevelationRightSidebar::OnFinishTimeSelected);
     connect(ui.btnSelectDeadline, &FluCalendarDateTimePicker::selectedTime, this, &RevelationRightSidebar::OnDeadlineTimeSelected);
+
+    connect(ui.cbRepeat, &QComboBox::currentIndexChanged, this, &RevelationRightSidebar::OnCbRepeatIndexChanged);
 }
 
 void RevelationRightSidebar::showEvent(QShowEvent* event)
@@ -89,17 +91,23 @@ void RevelationRightSidebar::showEvent(QShowEvent* event)
 void RevelationRightSidebar::hideEvent(QHideEvent* event)
 {
     OnTaskItemEdited();
-
     m_taskValid = false;
     m_task      = TaskPrototype();
+
+    emit RoutineEdited(m_routine);
+    m_routineValid = false;
+    m_routine      = TaskRoutine();
 }
 
 void RevelationRightSidebar::closeEvent(QCloseEvent* event)
 {
     OnTaskItemEdited();
-
     m_taskValid = false;
     m_task      = TaskPrototype();
+
+    emit RoutineEdited(m_routine);
+    m_routineValid = false;
+    m_routine      = TaskRoutine();
 }
 
 void RevelationRightSidebar::SetBtnAddToRoutineState(bool isRoutine)
@@ -117,7 +125,7 @@ void RevelationRightSidebar::SetBtnAddToRoutineState(bool isRoutine)
     ui.cbTag->addItem(lutTags[(int)m_task.m_taskTag]);
 }
 
-void RevelationRightSidebar::RefreshTaskData(const TaskPrototype& task)
+void RevelationRightSidebar::UpdateUI(const TaskPrototype& task)
 {
     BlockSignals(true);
 
@@ -133,7 +141,7 @@ void RevelationRightSidebar::RefreshTaskData(const TaskPrototype& task)
     ui.cbType->setCurrentText(lutTypes[(int)task.m_taskType]);
     ui.cbTag->clear();
     ui.cbTag->addItem(lutTags[(int)task.m_taskTag]);
-    SetBtnAddToRoutineState(task.m_taskTag == TaskTag::Routine);
+    SetBtnAddToRoutineState(false);
 
     auto ConvertToQDate = [&](const std::string& timeString, QDate& date, QTime& time) {
         std::string yyyymmdd = m_timeFormatter->ParsePartDateTimeFromString(timeString, TimeMask::YMD);
@@ -182,7 +190,28 @@ void RevelationRightSidebar::RefreshTaskData(const TaskPrototype& task)
     ui.btnSelectFinishTime->setCurTime(finishTime);
     ui.btnSelectDeadline->setCurTime(deadlineTime);
 
+    ui.labelRepeat->hide();
+    ui.cbRepeat->hide();
+
     ui.labelCreateTime->setText(tr("Created: ") + QString::fromStdString(task.m_createTime));
+
+    BlockSignals(false);
+}
+
+void RevelationRightSidebar::UpdateUI(const TaskRoutine& routine)
+{
+    BlockSignals(true);
+
+    SetBtnAddToRoutineState(true);
+
+    ui.labelRepeat->show();
+    ui.cbRepeat->show();
+
+    QSignalBlocker blocker(ui.cbRepeat);
+    QStringList    lutRepeat{tr("None"), tr("Daily"), tr("Weekly"), tr("Monthly"),
+                          tr("Yearly"), tr("WeekDay"), tr("Weekend")};
+    ui.cbRepeat->addItems(lutRepeat);
+    ui.cbRepeat->setCurrentIndex((int)routine.m_repeatType);
 
     BlockSignals(false);
 }
@@ -207,7 +236,7 @@ void RevelationRightSidebar::OnTaskReparenting(const TaskPrototype& task)
 {
     if (this->isVisible())
     {
-        RefreshTaskData(task);
+        UpdateUI(task);
     }
 }
 
@@ -226,7 +255,7 @@ void RevelationRightSidebar::OnTaskItemSelected(const TaskPrototype& task)
     m_taskValid = true;
     m_task      = task;
 
-    RefreshTaskData(task);
+    UpdateUI(task);
 
     this->show();
 }
@@ -244,15 +273,50 @@ void RevelationRightSidebar::OnTaskItemEdited()
     emit TaskItemEdited(m_task);
 }
 
+void RevelationRightSidebar::OnTaskRoutineAttached(const TaskRoutine& routine)
+{
+    if (m_routineValid)
+    {
+        if (routine == m_routine)
+        {
+            return;
+        }
+
+        emit RoutineEdited(m_routine);
+    }
+
+    m_routineValid = true;
+    m_routine      = routine;
+
+    UpdateUI(routine);
+}
+
 void RevelationRightSidebar::OnBtnAddToRoutineClicled()
 {
     auto isRoutine = m_task.m_taskTag == TaskTag::Routine;
     SetBtnAddToRoutineState(!isRoutine);
+
+    if (!isRoutine)
+    {
+        TaskRoutine routine{
+            m_task.m_id,
+            m_timeFormatter->GetCurrentDateTimeString(TimeMask::YMD),
+            TaskRepeatType::Daily,
+            m_task.m_title,
+            m_task.m_desc};
+        emit RoutineAdded(routine);
+    }
+    else
+    {
+        TaskRoutine routine{m_task.m_id};
+        emit        RoutineDeleted(routine);
+    }
 }
 
 void RevelationRightSidebar::OnBtnDeleteTaskItemClicked()
 {
-    m_taskValid = false;
+    m_taskValid    = false;
+    m_routineValid = false;
 
     emit TaskItemDeleted(m_task);
 
@@ -316,6 +380,11 @@ void RevelationRightSidebar::OnDeadlineTimeSelected(QTime time)
     std::string newDateTime  = oriStartDate + " " + newTime;
 
     m_task.m_deadline = newDateTime;
+}
+
+void RevelationRightSidebar::OnCbRepeatIndexChanged(int index)
+{
+    m_routine.m_repeatType = (TaskRepeatType)index;
 }
 
 void RevelationRightSidebar::BlockSignals(bool block)

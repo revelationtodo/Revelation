@@ -173,4 +173,11 @@ void RevelationListView::OnItemClicked(const QModelIndex& index)
 
     TaskPrototype task = m_model->m_tasks.at(taskIndex);
     emit          TaskItemSelected(task);
+
+    // task with additional routine info
+    auto routineFinder = m_model->s_routineCache.find(task.m_id);
+    if (routineFinder != m_model->s_routineCache.end())
+    {
+        emit TaskRoutineAttached(routineFinder->second);
+    }
 }

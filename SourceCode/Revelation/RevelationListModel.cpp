@@ -4,6 +4,7 @@
 
 // shared cache
 std::unordered_map<Uint64, TaskPrototype> RevelationListModel::s_taskCache;
+std::unordered_map<Uint64, TaskRoutine>   RevelationListModel::s_routineCache;
 std::mutex                                RevelationListModel::s_mutex;
 
 RevelationListModel::RevelationListModel(IRevelationInterface* intf, QObject* parent /*= nullptr*/)
@@ -80,6 +81,28 @@ void RevelationListModel::RemoveTaskItem(const TaskPrototype& task)
     s_taskCache.erase(task.m_id);
 }
 
+void RevelationListModel::InsertRoutineItem(const TaskRoutine& routine, bool fromDatabase /*= false*/)
+{
+    // shared cache
+    s_routineCache.emplace(routine.m_id, routine);
+}
+
+void RevelationListModel::ChangeRoutineItem(const TaskRoutine& routine)
+{
+    // shared cache
+    auto sharedCacheFinder = s_routineCache.find(routine.m_id);
+    if (sharedCacheFinder != s_routineCache.end())
+    {
+        sharedCacheFinder->second = routine;
+    }
+}
+
+void RevelationListModel::RemoveRoutineItem(const TaskRoutine& routine)
+{
+    // shared cache
+    s_routineCache.erase(routine.m_id);
+}
+
 QModelIndex RevelationListModel::index(int row, int column, const QModelIndex& parent /*= QModelIndex()*/) const
 {
     return QAbstractListModel::createIndex(row, column, (qintptr)row);
@@ -143,7 +166,7 @@ void RevelationListModel::UpdateTaskData(TaskPrototype& task)
     {
         task.m_startTime = "";
     }
-    
+
     if (m_type == TaskStatus::Doing || (m_type != TaskStatus::Todo && task.m_startTime.empty()))
     {
         task.m_startTime = timeFormatter->GetCurrentDateTimeString(TimeMask::YMDHMS);

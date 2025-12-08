@@ -23,11 +23,16 @@ class RevelationRightSidebar : public RevelationSidebar
 
     void SetBtnAddToRoutineState(bool isRoutine);
 
-    void RefreshTaskData(const TaskPrototype& task);
+    void UpdateUI(const TaskPrototype& task);
+    void UpdateUI(const TaskRoutine& routine);
 
   signals:
     void TaskItemEdited(const TaskPrototype& task);
     void TaskItemDeleted(const TaskPrototype& task);
+
+    void RoutineAdded(const TaskRoutine& routine);
+    void RoutineEdited(const TaskRoutine& routine);
+    void RoutineDeleted(const TaskRoutine& routine);
 
   public slots:
     void OnThemeChanged();
@@ -35,6 +40,8 @@ class RevelationRightSidebar : public RevelationSidebar
     void OnTaskReparenting(const TaskPrototype& task);
     void OnTaskItemSelected(const TaskPrototype& task);
     void OnTaskItemEdited();
+
+    void OnTaskRoutineAttached(const TaskRoutine& routine);
 
     void OnBtnAddToRoutineClicled();
     void OnBtnDeleteTaskItemClicked();
@@ -46,6 +53,8 @@ class RevelationRightSidebar : public RevelationSidebar
     void OnFinishTimeSelected(QTime time);
     void OnDeadlineTimeSelected(QTime time);
 
+    void OnCbRepeatIndexChanged(int index);
+
   private:
     void BlockSignals(bool block);
 
@@ -56,4 +65,7 @@ class RevelationRightSidebar : public RevelationSidebar
 
     TaskPrototype m_task;
     bool          m_taskValid = false;
+
+    TaskRoutine m_routine;
+    bool        m_routineValid = false;
 };
