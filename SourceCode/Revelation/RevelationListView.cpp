@@ -46,7 +46,7 @@ void RevelationListView::InitWidget()
     this->setModel(m_model);
     this->setItemDelegate(m_delegate);
 
-    FluStyleSheetUitls::setQssByFileName("/resources/qss/light/RevelationListView.qss", this);
+    FluStyleSheetUitls::setQssByFileName("RevelationListView.qss", this, FluThemeUtils::getUtils()->getTheme());
 }
 
 void RevelationListView::InitSignalSlots()

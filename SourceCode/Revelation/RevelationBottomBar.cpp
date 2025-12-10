@@ -28,7 +28,7 @@ void RevelationBottomBar::InitWidget()
     ui.btnConfirm->setFixedSize(32, 32);
     ui.btnConfirm->setIcon(FluIconUtils::getFluentIcon(FluAwesomeType::Accept));
 
-    FluStyleSheetUitls::setQssByFileName("/resources/qss/light/RevelationBottomBar.qss", this);
+    FluStyleSheetUitls::setQssByFileName("RevelationBottomBar.qss", this, FluThemeUtils::getUtils()->getTheme());
 }
 
 void RevelationBottomBar::InitSignalSlots()
@@ -52,14 +52,7 @@ void RevelationBottomBar::keyPressEvent(QKeyEvent* event)
 
 void RevelationBottomBar::OnThemeChanged()
 {
-    if (FluThemeUtils::isLightTheme())
-    {
-        FluStyleSheetUitls::setQssByFileName("/resources/qss/light/RevelationBottomBar.qss", this);
-    }
-    else
-    {
-        FluStyleSheetUitls::setQssByFileName("/resources/qss/dark/RevelationBottomBar.qss", this);
-    }
+    FluStyleSheetUitls::setQssByFileName("RevelationBottomBar.qss", this, FluThemeUtils::getUtils()->getTheme());
 }
 
 void RevelationBottomBar::OnBtnConfirmClicked()

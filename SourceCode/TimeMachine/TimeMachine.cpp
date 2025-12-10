@@ -40,7 +40,7 @@ void TimeMachine::InitWidget()
     }
 
     ui.eFilterWidget->setObjectName("filter");
-    FluStyleSheetUitls::setQssByFileName("/resources/qss/light/TimeMachine.qss", this);
+    FluStyleSheetUitls::setQssByFileName("TimeMachine.qss", this, FluThemeUtils::getUtils()->getTheme());
 }
 
 void TimeMachine::InitSignalSlots()
@@ -52,12 +52,5 @@ void TimeMachine::InitSignalSlots()
 
 void TimeMachine::OnThemeChanged()
 {
-    if (FluThemeUtils::isLightTheme())
-    {
-        FluStyleSheetUitls::setQssByFileName("/resources/qss/light/TimeMachine.qss", this);
-    }
-    else
-    {
-        FluStyleSheetUitls::setQssByFileName("/resources/qss/dark/TimeMachine.qss", this);
-    }
+    FluStyleSheetUitls::setQssByFileName("TimeMachine.qss", this, FluThemeUtils::getUtils()->getTheme());
 }

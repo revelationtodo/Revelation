@@ -63,7 +63,7 @@ void TimeMachineGanttView::InitWidget()
 
     m_rightView->setReadOnly(true);
 
-    FluStyleSheetUitls::setQssByFileName("/resources/qss/light/TimeMachineGanttView.qss", this);
+    FluStyleSheetUitls::setQssByFileName("TimeMachineGanttView.qss", this, FluThemeUtils::getUtils()->getTheme());
 }
 
 void TimeMachineGanttView::InitSignalSlots()
@@ -205,13 +205,12 @@ void TimeMachineGanttView::OnThemeChanged()
     if (FluThemeUtils::isLightTheme())
     {
         m_rightView->setBackgroundColor("#F0F0F0");
-        FluStyleSheetUitls::setQssByFileName("/resources/qss/light/TimeMachineGanttView.qss", this);
     }
     else
     {
         m_rightView->setBackgroundColor("#202020");
-        FluStyleSheetUitls::setQssByFileName("/resources/qss/dark/TimeMachineGanttView.qss", this);
     }
+    FluStyleSheetUitls::setQssByFileName("TimeMachineGanttView.qss", this, FluThemeUtils::getUtils()->getTheme());
 }
 
 void TimeMachineGanttView::OnTaskFiltered(const std::vector<DateToTasks>& dateToTaskVec)

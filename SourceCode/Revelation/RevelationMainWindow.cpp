@@ -143,7 +143,7 @@ void RevelationMainWindow::OnThemeChanged()
         m_titleBar->maximizeButton()->setActiveForegroundColor(Qt::black);
 #endif
         m_titleBar->show();
-        FluStyleSheetUitls::setQssByFileName("/resources/qss/light/RevelationMainWindow.qss", this);
+        FluStyleSheetUitls::setQssByFileName("RevelationMainWindow.qss", this, FluThemeUtils::getUtils()->getTheme());
     }
     else
     {
@@ -157,6 +157,6 @@ void RevelationMainWindow::OnThemeChanged()
         m_titleBar->maximizeButton()->setActiveForegroundColor(Qt::white);
 #endif
         m_titleBar->show();
-        FluStyleSheetUitls::setQssByFileName("/resources/qss/dark/RevelationMainWindow.qss", this);
+        FluStyleSheetUitls::setQssByFileName("RevelationMainWindow.qss", this, FluThemeUtils::getUtils()->getTheme());
     }
 }

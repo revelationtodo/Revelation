@@ -1,0 +1,9 @@
+FluColorPickerButton {
+    border: 2px solid rgb(229, 229, 229);
+    border-radius: 4px;
+    background-color: [[color]];
+}
+
+FluColorPickerButton:hover {
+    border: 2px solid rgb(20, 103, 166);
+}

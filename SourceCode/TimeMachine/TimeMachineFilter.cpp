@@ -37,7 +37,7 @@ void TimeMachineFilter::InitWidget()
     ui.cbType->addItems({tr("All"), tr("None"), tr("Bug"), tr("Feature"), tr("Test"), tr("UI")});
     ui.cbTag->addItems({tr("All"), tr("None"), tr("Routine"), tr("Inherited")});
 
-    FluStyleSheetUitls::setQssByFileName("/resources/qss/light/TimeMachineFilter.qss", this);
+    FluStyleSheetUitls::setQssByFileName("TimeMachineFilter.qss", this, FluThemeUtils::getUtils()->getTheme());
 }
 
 void TimeMachineFilter::InitSignalSlots()
@@ -125,14 +125,7 @@ void TimeMachineFilter::SortTasksByTaskParameter(std::vector<DateToTasks>& dateT
 
 void TimeMachineFilter::OnThemeChanged()
 {
-    if (FluThemeUtils::isLightTheme())
-    {
-        FluStyleSheetUitls::setQssByFileName("/resources/qss/light/TimeMachineFilter.qss", this);
-    }
-    else
-    {
-        FluStyleSheetUitls::setQssByFileName("/resources/qss/dark/TimeMachineFilter.qss", this);
-    }
+    FluStyleSheetUitls::setQssByFileName("TimeMachineFilter.qss", this, FluThemeUtils::getUtils()->getTheme());
 }
 
 void TimeMachineFilter::OnBtnFilterClicked()

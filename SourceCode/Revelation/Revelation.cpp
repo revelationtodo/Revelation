@@ -131,7 +131,7 @@ void Revelation::InitWidget()
                 GetSidebar(RevelationSidebar::Right), SLOT(OnTaskRoutineAttached(const TaskRoutine&)));
     }
 
-    FluStyleSheetUitls::setQssByFileName("/resources/qss/light/Revelation.qss", this);
+    FluStyleSheetUitls::setQssByFileName("Revelation.qss", this, FluThemeUtils::getUtils()->getTheme());
 }
 
 void Revelation::InitSignalSlots()
@@ -193,14 +193,7 @@ RevelationSidebar* Revelation::GetSidebar(RevelationSidebar::Side side)
 
 void Revelation::OnThemeChanged()
 {
-    if (FluThemeUtils::isLightTheme())
-    {
-        FluStyleSheetUitls::setQssByFileName("/resources/qss/light/Revelation.qss", this);
-    }
-    else
-    {
-        FluStyleSheetUitls::setQssByFileName("/resources/qss/dark/Revelation.qss", this);
-    }
+    FluStyleSheetUitls::setQssByFileName("Revelation.qss", this, FluThemeUtils::getUtils()->getTheme());
 }
 
 void Revelation::OnTaskItemReparenting(TaskPrototype task, TaskStatus from, TaskStatus to)
@@ -230,7 +223,7 @@ void Revelation::OnTaskItemReparenting(TaskPrototype task, TaskStatus from, Task
     emit TaskItemReparenting(task);
 
     // change data in database
-    auto threadTaskCreator         = m_interface->GetInterfaceById<IUtilityInterface>("Utility")->GetThreadTaskCreator();
+    auto threadTaskCreator   = m_interface->GetInterfaceById<IUtilityInterface>("Utility")->GetThreadTaskCreator();
     auto dataPersistenceIntf = m_interface->GetInterfaceById<IDataPersistenceInterface>("DataPersistence");
     if (nullptr != threadTaskCreator && nullptr != dataPersistenceIntf)
     {
@@ -250,7 +243,7 @@ void Revelation::OnTaskItemEdited(const TaskPrototype& task)
         model->ChangeTaskItem(task);
     }
 
-    auto threadTaskCreator         = m_interface->GetInterfaceById<IUtilityInterface>("Utility")->GetThreadTaskCreator();
+    auto threadTaskCreator   = m_interface->GetInterfaceById<IUtilityInterface>("Utility")->GetThreadTaskCreator();
     auto dataPersistenceIntf = m_interface->GetInterfaceById<IDataPersistenceInterface>("DataPersistence");
     if (nullptr != threadTaskCreator && nullptr != dataPersistenceIntf)
     {
@@ -270,7 +263,7 @@ void Revelation::OnTaskItemDeleted(const TaskPrototype& task)
         model->RemoveTaskItem(task);
     }
 
-    auto threadTaskCreator         = m_interface->GetInterfaceById<IUtilityInterface>("Utility")->GetThreadTaskCreator();
+    auto threadTaskCreator   = m_interface->GetInterfaceById<IUtilityInterface>("Utility")->GetThreadTaskCreator();
     auto dataPersistenceIntf = m_interface->GetInterfaceById<IDataPersistenceInterface>("DataPersistence");
     if (nullptr != threadTaskCreator && nullptr != dataPersistenceIntf)
     {
@@ -283,7 +276,7 @@ void Revelation::OnTaskItemDeleted(const TaskPrototype& task)
 void Revelation::OnRoutineAdded(const TaskRoutine& routine)
 {
     RevelationListModel::InsertRoutineItem(routine);
-    
+
     auto threadTaskCreator   = m_interface->GetInterfaceById<IUtilityInterface>("Utility")->GetThreadTaskCreator();
     auto dataPersistenceIntf = m_interface->GetInterfaceById<IDataPersistenceInterface>("DataPersistence");
     if (nullptr != threadTaskCreator && nullptr != dataPersistenceIntf)

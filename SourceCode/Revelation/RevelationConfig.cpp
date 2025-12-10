@@ -27,7 +27,7 @@ RevelationConfig::~RevelationConfig()
 
 void RevelationConfig::AddSettingItem(QWidget* item)
 {
-    m_scrollArea->getMainLayout()->addWidget(item);
+    m_scrollArea->getMainLayout()->addWidget(item, 0, Qt::AlignTop);
 }
 
 void RevelationConfig::RemoveSettingsItems()
@@ -51,6 +51,7 @@ void RevelationConfig::InitWidget()
     m_scrollArea = new FluVScrollView;
     m_scrollArea->getMainLayout()->setAlignment(Qt::AlignTop);
     QVBoxLayout* layout = new QVBoxLayout(this);
+    layout->setAlignment(Qt::AlignTop);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(m_scrollArea);
     ui.eScrollAreaWidget->setLayout(layout);
@@ -207,5 +208,5 @@ void RevelationConfig::SetupApplicationInfoItem()
 
     revelationItem->addWidget(referenceItemWidget);
 
-    m_scrollArea->getMainLayout()->addWidget(revelationItem);
+    m_scrollArea->getMainLayout()->addWidget(revelationItem, 0, Qt::AlignTop);
 }

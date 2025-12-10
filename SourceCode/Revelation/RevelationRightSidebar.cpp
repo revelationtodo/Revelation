@@ -47,7 +47,7 @@ void RevelationRightSidebar::InitWidget()
 
     ui.labelCreateTime->setAlignment(Qt::AlignCenter);
 
-    FluStyleSheetUitls::setQssByFileName("/resources/qss/light/RevelationRightSidebar.qss", this);
+    FluStyleSheetUitls::setQssByFileName("RevelationRightSidebar.qss", this, FluThemeUtils::getUtils()->getTheme());
 }
 
 void RevelationRightSidebar::InitSignalSlots()
@@ -218,16 +218,9 @@ void RevelationRightSidebar::UpdateUI(const TaskRoutine& routine)
 
 void RevelationRightSidebar::OnThemeChanged()
 {
-    FluTheme theme = FluThemeUtils::getUtils()->getTheme();
-    if (theme == FluTheme::Light)
-    {
-        FluStyleSheetUitls::setQssByFileName("/resources/qss/light/RevelationRightSidebar.qss", this);
-    }
-    else
-    {
-        FluStyleSheetUitls::setQssByFileName("/resources/qss/dark/RevelationRightSidebar.qss", this);
-    }
+    FluStyleSheetUitls::setQssByFileName("RevelationRightSidebar.qss", this, FluThemeUtils::getUtils()->getTheme());
 
+    FluTheme theme = FluThemeUtils::getUtils()->getTheme();
     ui.btnAddToRoutine->setIcon(FluIconUtils::getFluentIcon(FluAwesomeType::FavoriteStar, theme));
     ui.btnHide->setIcon(FluIconUtils::getFluentIcon(FluAwesomeType::Cancel, theme));
 }

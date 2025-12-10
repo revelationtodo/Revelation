@@ -1,4 +1,10 @@
 FluTimePicker24HView {
+    background-color: transparent;
+    qproperty-maskBackgroundColorEx: rgb(0, 90, 158);
+    qproperty-maskTextColorEx: black;
+}
+
+#mainView {
     background-color: rgb(249, 249, 249);
     border: 1px solid rgb(234, 234, 234);
     border-radius: 8px;
