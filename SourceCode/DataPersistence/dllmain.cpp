@@ -1,5 +1,4 @@
-﻿#include "IRevelationInterface.h"
-#include "DataPersistenceInterface.h"
+﻿#include "DataPersistenceInterface.h"
 
 DLL_EXPORT IExtensionInterface* ExtensionEntrance(IRevelationInterface* intf)
 {
