@@ -45,3 +45,5 @@ else()
                 ${PROJECT_BINARY_DIR}/Revelation/resources
     )
 endif()
+
+set_property(TARGET ResourceCopy PROPERTY FOLDER ResourceCopy)
