@@ -62,13 +62,15 @@ cmake ../SourceCode/ --preset windows
 
 ```bash
 # using Qt msvc command line tool
-# cd to binary folder where `Revelation.exe` is located
+# cd to the binary folder where `Revelation.exe` is located
 windeployqt Revelation.exe
 ```
 
 ### Copy resource files
 
 Build `ResourceCopy` project to copy necessary resources
+
+Copy files downloaded from the [Release page](https://github.com/revelationtodo/Revelation/releases/latest) to the binary folder in case of dll missing.
 
 ### Open solution and set `Revelation` as default start-up project
 
