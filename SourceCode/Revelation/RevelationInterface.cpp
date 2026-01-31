@@ -116,6 +116,15 @@ void RevelationInterface::LoadExtensions()
                     if (nullptr == library)
                     {
                         DWORD errorCode = GetLastError();
+                        LPSTR errorMsg  = nullptr;
+                        FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                                       nullptr, errorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                                       (LPSTR)&errorMsg, 0, nullptr);
+                        std::string s = nullptr != errorMsg ? errorMsg : "";
+                        if (nullptr != errorMsg)
+                        {
+                            LocalFree(errorMsg);
+                        }
                         continue;
                     }
 
