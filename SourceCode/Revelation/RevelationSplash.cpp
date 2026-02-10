@@ -26,7 +26,7 @@ void RevelationSplash::InitWidget()
     this->setWindowFlag(Qt::WindowStaysOnTopHint);
     this->setAttribute(Qt::WA_TranslucentBackground);
 
-    auto iconPath = m_interface->GetResourcePath() / "images" / "icon.ico";
+    auto iconPath = m_interface->GetResourcePath() / "image" / "icon.ico";
     if (std::filesystem::exists(iconPath))
     {
         auto    u8     = iconPath.u8string();
@@ -35,7 +35,7 @@ void RevelationSplash::InitWidget()
         this->setWindowIcon(pixmap);
     }
 
-    auto imagePath = m_interface->GetResourcePath() / "images" / "splash.png";
+    auto imagePath = m_interface->GetResourcePath() / "image" / "splash.png";
     if (std::filesystem::exists(imagePath))
     {
         QLabel* label  = new QLabel(ui.eSplashWidget);

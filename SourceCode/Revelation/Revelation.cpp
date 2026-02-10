@@ -85,7 +85,7 @@ void Revelation::InitWidget()
     auto mainWindow = (QMainWindow*)m_interface->GetMainWindow();
     if (nullptr != mainWindow)
     {
-        QIcon icon("./resources/images/icon.ico");
+        QIcon icon("./resources/image/icon.ico");
         mainWindow->setWindowIcon(icon);
         mainWindow->setWindowTitle("Revelation");
     }

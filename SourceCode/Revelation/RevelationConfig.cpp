@@ -75,7 +75,7 @@ void RevelationConfig::SetupApplicationInfoItem()
     revelationItem->getInfoLabel()->setText("Open-source license: GPLv3");
     revelationItem->getVersionLabel()->setText(QString::fromStdString(version));
 
-    QIcon icon = QIcon("./resources/images/icon.ico");
+    QIcon icon = QIcon("./resources/image/icon.ico");
     revelationItem->getIconLabel()->setPixmap(icon.pixmap(40, 40));
     revelationItem->getIconLabel()->setFixedSize(40, 40);
 
